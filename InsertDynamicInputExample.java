@@ -21,7 +21,7 @@ public class InsertDynamicInputExample{
         System.out.println("Please Enter Employee Name");
         String ename = sc.nextLine();
         System.out.println("Please Enter Employee Salary");
-        int esal = sc.nextInt();
+        double esal = sc.nextInt();
         sc.nextLine();
         System.out.println("Please Enter Employee Address");
         String eaddr = sc.nextLine();
