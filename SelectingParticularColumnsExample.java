@@ -4,9 +4,9 @@ import java.util.Scanner;
 import java.sql.*;
 import java.util.*;
 
-// this class selects * from employees with employee names starting with certain characters
+// this class selects particular columns from employees and process them in the ResultSet
 
-public class SelectRangeOfRecordsExample2 {
+public class SelectingParticularColumnsExample {
 
     public static void main(String[] args) throws Exception {
         String driver = "com.mysql.cj.jdbc.Driver";
@@ -18,21 +18,16 @@ public class SelectRangeOfRecordsExample2 {
         Connection con = DriverManager.getConnection(jdbc_url, user, password);
         Statement st = con.createStatement();
 
-        Scanner sc = new Scanner(System.in);
-        System.out.println("Enter starting characters of name");
-        String name = sc.nextLine() + "%";
-
-        String sql_query = String.format("select * from employees where ename like '%s'" , name);
+        String sql_query = String.format("select ename, eaddr from employees");
         ResultSet rs  = st.executeQuery(sql_query); // since this is a select query, executeQuery() is used!
-        System.out.println("ENO \t ENAME \t ESAL \t EADDR");
+        System.out.println("ENAME \t EADDR");
         System.out.println("----------------------------------------------");
 
         // process Result Set
         boolean flag = true;
         while (rs.next()){
 
-            System.out.format("%5d%10s%10s%10s%n" , rs.getInt(1), rs.getString(2), rs.getDouble(3),  rs.getString(4));
-            // System.out.println();
+            System.out.format("%-10s%-10s%n" , rs.getString(1), rs.getString(2));
 
             flag = false;
         }
