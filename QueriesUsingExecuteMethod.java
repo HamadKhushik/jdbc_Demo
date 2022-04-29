@@ -2,8 +2,8 @@ import java.util.*;
 import java.io.FileOutputStream;
 import java.sql.*;
 
-// this program selects * from employees and displays them in HTML
-public class SelectAllRowsToHTML {
+// this program reads the query entered by user at runtime and executes it using the execute() method
+public class QueriesUsingExecuteMethod {
 
     public static void main(String[] args) throws Exception {
 
@@ -13,29 +13,27 @@ public class SelectAllRowsToHTML {
 
         Connection con = DriverManager.getConnection(url, username, pwd);
         Statement st = con.createStatement();
-        
-        // count function -> returns the number of rows in table
-        String sql_query = "select * from employees";
-        ResultSet rs = st.executeQuery(sql_query);
 
-        String data = "<html> <body bgcolor='green' text='white'> <center> <table border='2' style='width:50%'>";
-        data = data + "<tr style='height:50px'><td>ENO</td><td>ENAME</td><td>ESAL</td><td>EADDR</td></tr>";
-        
-        while (rs.next()){  // if there are more than one emp with heighest sal
-           data = data + "<tr style='height:50px'><td>" + rs.getInt(1) + "</td><td>" + rs.getString(2) + "</td><td>" + rs.getDouble(3) + "</td><td>" + rs.getString(4) + "</td></tr>";
+        Scanner sc = new Scanner(System.in);
+        System.out.println("Please Enter the SQL query:");
+        String sql_query = sc.nextLine();
+
+        boolean selectQuery = st.execute(sql_query);
+
+        if (selectQuery) {
+            ResultSet rs = st.getResultSet();
+            while (rs.next()) {
+                // System.out.println(
+                        // rs.getInt(1) + '\t' + rs.getString(2) + '\t' + rs.getDouble(3) + '\t' + rs.getString(4));
+                        System.out.format("%-5d%-10s%-8.2f%-10s\n", rs.getInt(1), rs.getString(2), rs.getDouble(3), rs.getString(4));
+            }
+        } else {
+            int count = st.getUpdateCount();
+            System.out.println("Number of lines effected is: " + count);
         }
 
-        data = data + "</table></center></body></html>";
-        // write the data to HTML file
-        FileOutputStream fos = new FileOutputStream("emp.html");
-        byte[] b = data.getBytes();
-        fos.write(b);  // write byte to HTML, fos only writes byte[]
-        fos.flush();  // good programming practice to flush fos after writing
-
-        System.out.println("Open emp.html to view the contents of query");
-
-        fos.close();   // close the file output stream
         // close connection - optional in java 1.8 onwards
         con.close();
+
     }
 }
